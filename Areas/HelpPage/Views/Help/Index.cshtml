@@ -1,0 +1,56 @@
+@using System.Web.Http
+@using System.Web.Http.Controllers
+@using System.Web.Http.Description
+@using System.Collections.ObjectModel
+@using APIRh.Areas.HelpPage.Models
+@model Collection<ApiDescription>
+
+@{
+    ViewBag.Title = "Documentação API RH";
+
+    // Group APIs by controller
+    ILookup<HttpControllerDescriptor, ApiDescription> apiGroups = Model.ToLookup(api => api.ActionDescriptor.ControllerDescriptor);
+}
+
+<link type="text/css" href="~/Areas/HelpPage/HelpPage.css" rel="stylesheet" />
+<header class="help-page">
+    <div class="content-wrapper">
+        <div class="float-left">
+            <h1>@ViewBag.Title</h1>
+        </div>
+    </div>
+</header>
+<div id="body" class="help-page">
+    <section class="featured">
+        <div class="content-wrapper">
+            <h2>Contexto</h2>
+            <p>
+                A regra de negócio que inspirou a criação deste API é:
+            </p>
+            <p>
+                “O RH necessita de uma aplicação para traçar as tecnologias que os candidatos
+                conhecem. Como cadastros base, será informado ao sistema quais tecnologias a
+                empresa trabalha, e quais vagas estão disponíveis. Durante a entrevista, candidato
+                será cadastrado a uma vaga e vinculado às tecnologias que conhece. Ao final do
+                período de triagem de currículos, o RH informará o peso de cada tecnologia para a
+                vaga em questão, recebendo com isso, um relatório ordenado por candidato, pontuado
+                de acordo com o conhecimento do mesmo.”
+            </p>
+            <p>
+                Diante disso, o processo de utilização da API é:
+            </p>
+            <ol>
+                <li>Cadastrar vagas e tecnologias (o atributo peso para as tecnologias não deve ser informado nessa etapa)</li>
+                <li>Cadastrar candidatos (informando a vaga que ele está atrelado e as tecnologias que tem conhecimento)</li>
+                <li>Cadastrar peso das tecnologias de uma vaga (Classe relatório)</li>
+                <li>Listar candidatos com o resultado do processo de uma vaga</li>
+            </ol>
+        </div>
+    </section>
+    <section class="content-wrapper main-content clear-fix">
+        @foreach (var group in apiGroups)
+        {
+            @Html.DisplayFor(m => group, "ApiGroup")
+        }
+    </section>
+</div>
